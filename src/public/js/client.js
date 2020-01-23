@@ -51,11 +51,24 @@ canvas.width = 800;
 canvas.height = 600;
 var context = canvas.getContext('2d');
 
-socket.on('state', function (players) {
+socket.on('state', function (game) {
     context.clearRect(0, 0, 800, 600);
+
+    // draw grid
+    for (var i = 0; i < game.grid.length; i++) {
+        for (var j = 0; j < game.grid[i].length; j++) {
+            context.strokeStyle = 'black';
+            if (game.grid[i][j].item == 'wall') {
+                context.fillRect(game.grid[i][j].x, game.grid[i][j].y, 50, 50);
+            } else {
+                context.strokeRect(game.grid[i][j].x, game.grid[i][j].y, 50, 50);
+            }
+        }
+    }
+
     context.fillStyle = 'green';
-    for (var id in players) {
-        var player = players[id];
+    for (var id in game.players) {
+        var player = game.players[id];
         context.beginPath();
         context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
         context.fill();
