@@ -1,4 +1,4 @@
-var socket = io();
+var socket = io(":5000");
 
 socket.emit('new player');
 
