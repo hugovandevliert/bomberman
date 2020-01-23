@@ -1,23 +1,17 @@
-var express = require('express');
-var http = require('http');
+var fs = require('fs');
+var https = require('https');
 var path = require('path');
+var express = require('express');
 var socketIO = require('socket.io');
 
+var options = {
+    key: fs.readFileSync('./privkey.pem'),
+    cert: fs.readFileSync('./fullchain.pem')
+};
+
 var app = express();
-var server = http.Server(app);
-var io = socketIO(server);
-
-app.set('port', 5000);
-app.use(express.static('src/public'));
-
-// Routing
-app.get('/', function (request, response) {
-    response.sendFile(path.join(__dirname, 'public/index.html'));
-});
-
-server.listen(5000, function () {
-    console.log('Starting server on port 5000');
-});
+var server = https.createServer(options, app).listen(5000);
+var io = socketIO.listen(server);
 
 var players = {};
 
