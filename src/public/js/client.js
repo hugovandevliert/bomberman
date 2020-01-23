@@ -74,3 +74,17 @@ socket.on('state', function (game) {
         context.fill();
     }
 });
+
+document.getElementById('message-form').onsubmit = function (event) {
+    event.preventDefault();
+    var message = document.getElementById('message-input');
+    socket.emit('chat message', message.value);
+    message.value = '';
+};
+
+socket.on('chat message', function (message) {
+    var node = document.createElement('li');
+    var textnode = document.createTextNode(message);
+    node.appendChild(textnode);
+    document.getElementById('message-list').appendChild(node);
+});
