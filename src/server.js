@@ -1,6 +1,5 @@
 var fs = require('fs');
 var https = require('https');
-var path = require('path');
 var express = require('express');
 var socketIO = require('socket.io');
 
@@ -12,6 +11,8 @@ var options = {
 var app = express();
 var server = https.createServer(options, app).listen(5000);
 var io = socketIO.listen(server);
+
+app.use(express.static('src/public'));
 
 var players = {};
 
