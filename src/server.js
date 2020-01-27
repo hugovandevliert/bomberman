@@ -4,7 +4,6 @@ var express = require('express');
 var socketIO = require('socket.io');
 
 var game = require('./public/js/game');
-var player = require('./public/js/player');
 
 var options = {
     key: fs.readFileSync('./privkey.pem'),
@@ -17,15 +16,19 @@ var io = socketIO.listen(server);
 
 app.use(express.static('src/public'));
 
-var currentGame = new game(11, 13, {});
+var currentGame = new game(11, 13);
 
 io.on('connection', function (socket) {
     socket.on('new player', function () {
-        currentGame.players[socket.id] = new player(25, 25);
+        console.log('New player connected:', socket.id)
+        currentGame.addPlayer(socket.id);
     });
 
     socket.on('movement', function (data) {
         var player = currentGame.players[socket.id] || {};
+        if (data.bomb) {
+            player.droppedBomb = true;
+        }
         if (data.left) {
             player.nextMove = 'left';
         } else if (data.up) {
@@ -47,7 +50,7 @@ io.on('connection', function (socket) {
 });
 
 setInterval(function () {
-    io.sockets.emit('state', currentGame);
+    io.sockets.emit('state', currentGame.grid);
 }, 1000 / 60);
 
 setInterval(function () {

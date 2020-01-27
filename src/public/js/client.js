@@ -10,38 +10,45 @@ var movement = {
     up: false,
     down: false,
     left: false,
-    right: false
+    right: false,
+    bomb: false
 };
 
 document.addEventListener('keydown', function (event) {
-    switch (event.keyCode) {
-        case 87: // W
+    switch (event.key) {
+        case "w":
             movement.up = true;
             break;
-        case 65: // A
+        case "a":
             movement.left = true;
             break;
-        case 83: // S
+        case "s":
             movement.down = true;
             break;
-        case 68: // D
+        case "d":
             movement.right = true;
+            break;
+        case " ":
+            movement.bomb = true;
             break;
     }
 });
 document.addEventListener('keyup', function (event) {
-    switch (event.keyCode) {
-        case 87: // W
+    switch (event.key) {
+        case "w":
             movement.up = false;
             break;
-        case 65: // A
+        case "a":
             movement.left = false;
             break;
-        case 83: // S
+        case "s":
             movement.down = false;
             break;
-        case 68: // D
-            movement.right = false;
+        case "d":
+            movement.right = false;;
+            break;
+        case " ":
+            movement.bomb = false;
             break;
     }
 });
@@ -51,27 +58,33 @@ canvas.width = 800;
 canvas.height = 600;
 var context = canvas.getContext('2d');
 
-socket.on('state', function (game) {
+socket.on('state', function (grid) {
     context.clearRect(0, 0, 800, 600);
 
-    // draw grid
-    for (var i = 0; i < game.grid.length; i++) {
-        for (var j = 0; j < game.grid[i].length; j++) {
-            context.strokeStyle = 'black';
-            if (game.grid[i][j].item == 'wall') {
-                context.fillRect(game.grid[i][j].x, game.grid[i][j].y, 50, 50);
-            } else {
-                context.strokeRect(game.grid[i][j].x, game.grid[i][j].y, 50, 50);
+    for (var i = 0; i < grid.length; i++) {
+        for (var j = 0; j < grid[i].length; j++) {
+            var cell = grid[i][j];
+            context.fillStyle = 'black';
+            context.strokeRect(cell.x, cell.y, 50, 50);
+            if (cell.solid) {
+                context.fillRect(cell.x, cell.y, 50, 50);
+            } else if (cell.item) {
+                context.fillStyle = 'gray';
+                context.fillRect(cell.x, cell.y, 50, 50);
+            }
+            if (cell.bomb) {
+                context.fillStyle = 'red';
+                context.beginPath();
+                context.arc(cell.x + 25, cell.y + 25, 15, 0, 2 * Math.PI);
+                context.fill();
+            }
+            if (cell.player) {
+                context.fillStyle = 'green';
+                context.beginPath();
+                context.arc(cell.x + 25, cell.y + 25, 10, 0, 2 * Math.PI);
+                context.fill();
             }
         }
-    }
-
-    context.fillStyle = 'green';
-    for (var id in game.players) {
-        var player = game.players[id];
-        context.beginPath();
-        context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
-        context.fill();
     }
 });
 
