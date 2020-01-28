@@ -54,35 +54,45 @@ document.addEventListener('keyup', function (event) {
 });
 
 var canvas = document.getElementById('canvas');
-canvas.width = 800;
-canvas.height = 600;
+canvas.width = 750;
+canvas.height = 550;
 var context = canvas.getContext('2d');
+context.strokeStyle = 'black';
+context.fillStyle = 'black';
+context.font = '30px serif';
+context.textAlign = 'center';
+context.textBaseline = 'middle';
 
 socket.on('state', function (grid) {
-    context.clearRect(0, 0, 800, 600);
+    context.clearRect(0, 0, 750, 550);
 
     for (var i = 0; i < grid.length; i++) {
         for (var j = 0; j < grid[i].length; j++) {
             var cell = grid[i][j];
-            context.fillStyle = 'black';
             context.strokeRect(cell.x, cell.y, 50, 50);
             if (cell.solid) {
                 context.fillRect(cell.x, cell.y, 50, 50);
             } else if (cell.item) {
-                context.fillStyle = 'gray';
-                context.fillRect(cell.x, cell.y, 50, 50);
+                if (cell.item == 'crate') {
+                    context.fillStyle = 'gray';
+                    context.fillRect(cell.x, cell.y, 50, 50);
+                } else if (cell.item == 'speed-boost') {
+                    context.fillText('🏃', cell.x + 25, cell.y + 25);
+                } else if (cell.item == 'bomb-amount-increase') {
+                    context.fillText('💣', cell.x + 25, cell.y + 25);
+                    context.fillText('➕', cell.x + 25, cell.y + 25);
+                } else if (cell.item == 'bomb-range-increase') {
+                    context.fillText('🎆', cell.x + 25, cell.y + 25);
+                }
             }
             if (cell.bomb) {
-                context.font = '30px serif';
-                context.textAlign = 'center';
-                context.textBaseline = 'middle';
                 context.fillText('💣', cell.x + 25, cell.y + 25);
             }
             if (cell.player) {
-                context.fillStyle = 'green';
-                context.beginPath();
-                context.arc(cell.x + 25, cell.y + 25, 10, 0, 2 * Math.PI);
-                context.fill();
+                context.fillText(cell.player, cell.x + 25, cell.y + 25);
+            }
+            if (cell.exploding) {
+                context.fillText('💥', cell.x + 25, cell.y + 25);
             }
         }
     }
