@@ -73,10 +73,10 @@ socket.on('state', function (grid) {
                 context.fillRect(cell.x, cell.y, 50, 50);
             }
             if (cell.bomb) {
-                context.fillStyle = 'red';
-                context.beginPath();
-                context.arc(cell.x + 25, cell.y + 25, 15, 0, 2 * Math.PI);
-                context.fill();
+                context.font = '30px serif';
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillText('💣', cell.x + 25, cell.y + 25);
             }
             if (cell.player) {
                 context.fillStyle = 'green';
