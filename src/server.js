@@ -45,7 +45,8 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function () {
-        delete currentGame.players[socket.id];
+        console.log('Player left:', socket.id)
+        currentGame.removePlayer(socket.id);
     });
 });
 

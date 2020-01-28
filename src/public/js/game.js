@@ -37,6 +37,11 @@ class Game {
         this.playerCount++;
     }
 
+    removePlayer(id) {
+        this.players[id].die();
+        delete this.players[id];
+    }
+
     update() {
         for (var i = 0; i < this.grid.length; i++) {
             for (var j = 0; j < this.grid[i].length; j++) {
