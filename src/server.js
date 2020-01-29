@@ -41,7 +41,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('chat message', function (message) {
-        io.sockets.emit('chat message', message);
+        io.sockets.emit('chat message', socket.id + ': ' + message);
     });
 
     socket.on('disconnect', function () {
