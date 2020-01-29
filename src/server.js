@@ -21,6 +21,7 @@ var currentGame = new game(11, 13);
 io.on('connection', function (socket) {
     socket.on('new player', function () {
         console.log('New player connected:', socket.id)
+        io.sockets.emit('chat message', 'Server: ' + socket.id + ' joined.');
         currentGame.addPlayer(socket.id);
     });
 
@@ -54,6 +55,7 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function () {
         console.log('Player left:', socket.id)
+        io.sockets.emit('chat message', 'Server: ' + socket.id + ' left.');
         currentGame.removePlayer(socket.id);
     });
 });
