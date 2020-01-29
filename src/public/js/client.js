@@ -56,7 +56,14 @@ document.addEventListener('keyup', function (event) {
         }
     }
 });
-
+document.getElementById('message-form').onsubmit = function (event) {
+    event.preventDefault();
+    var message = document.getElementById('message-input');
+    if (message.value) {
+        socket.emit('chat message', message.value);
+        message.value = '';
+    }
+};
 document.getElementById('restart').onclick = function () {
     socket.emit('restart');
     this.blur();
@@ -107,16 +114,11 @@ socket.on('state', function (grid) {
     }
 });
 
-document.getElementById('message-form').onsubmit = function (event) {
-    event.preventDefault();
-    var message = document.getElementById('message-input');
-    socket.emit('chat message', message.value);
-    message.value = '';
-};
-
 socket.on('chat message', function (message) {
     var node = document.createElement('li');
-    var textnode = document.createTextNode(message);
-    node.appendChild(textnode);
-    document.getElementById('message-list').appendChild(node);
+    var messageNode = document.createTextNode(message);
+    node.appendChild(messageNode);
+    var messageList = document.getElementById('message-list');
+    messageList.appendChild(node);
+    messageList.scrollTop = messageList.scrollHeight;
 });

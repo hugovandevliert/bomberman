@@ -3,6 +3,7 @@
 <head>
     <title>Bomberman</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="application/javascript" src="//hugovandevliert.com:5000/socket.io/socket.io.js"></script>
 </head>
 
@@ -10,10 +11,12 @@
     <canvas id="canvas"></canvas>
     <button id="restart">Restart</button>
 
-    <ul id="message-list"></ul>
-    <form id="message-form" action="">
-        <input id="message-input" autocomplete="off" /><button>Send</button>
-    </form>
+    <div id="chat-box">
+        <ul id="message-list"></ul>
+        <form id="message-form" action="">
+            <input id="message-input" autocomplete="off" /><button>Send</button>
+        </form>
+    </div>
 </body>
 <script type="application/javascript" src="js/client.js"></script>
 
