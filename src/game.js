@@ -54,34 +54,42 @@ class Game {
                 var cell = this.grid[i][j];
                 cell.update();
 
-                if (cell.player) {
-                    var player = cell.player;
-                    if (player.droppedBomb) {
-                        var cells = [cell];
+                if (!cell.player) {
+                    continue;
+                }
 
-                        for (var direction of Player.directions()) {
-                            var count = 1;
-                            while (count <= player.bombRange) {
-                                var explodingCell = this.calculatePosition(i, j, direction, count);
-                                if (!explodingCell || explodingCell.solid) {
-                                    break;
-                                }
-                                cells.push(explodingCell);
-                                count++;
+                var player = cell.player;
+                player.update();
+
+                if (cell.bomb) {
+                    player.droppedBomb = false;
+                }
+                if (player.droppedBomb && player.canDropBomb()) {
+                    var cells = [cell];
+                    for (var direction of Player.directions()) {
+                        var count = 1;
+                        while (count <= player.bombRange) {
+                            var explodingCell = this.calculatePosition(i, j, direction, count);
+                            if (!explodingCell || explodingCell.solid) {
+                                break;
                             }
+                            cells.push(explodingCell);
+                            count++;
                         }
-
-                        cell.bomb = new Bomb(cells);
-                        player.droppedBomb = false;
                     }
+                    cell.bomb = new Bomb(player, cells);
+                    player.dropBomb();
+                }
 
-                    if (player.nextMove); {
-                        var newCell = this.calculatePosition(i, j, player.nextMove, 1);
-                        if (newCell && newCell.isWalkable()) {
-                            newCell.player = player;
-                            cell.player = null;
-                        }
-                        player.nextMove = null;
+                if (player.nextMove && player.canMove()) {
+                    var newCell = this.calculatePosition(i, j, player.nextMove, 1);
+                    if (newCell && newCell.isWalkable()) {
+                        newCell.player = player;
+                        cell.player = null;
+                    }
+                    player.move();
+                    if (newCell.exploding) {
+                        player.die();
                     }
                 }
             }
@@ -187,9 +195,10 @@ class Cell {
 }
 
 class Bomb {
-    constructor(range) {
+    constructor(owner, range) {
+        this.owner = owner;
         this.range = range;
-        this.detonationTime = 5;
+        this.detonationTime = 20;
         this.detonated = false;
     }
 
@@ -203,6 +212,7 @@ class Bomb {
     explode() {
         if (!this.detonated) {
             this.detonated = true;
+            this.owner.bombCount--;
             this.range.forEach(function (cell) {
                 cell.explode();
             });
@@ -214,8 +224,9 @@ class Player {
     constructor(emoji) {
         this.emoji = emoji;
         this.timeUntilMove = 10;
-        this.speed = 1;
-        this.bombAmount = 1;
+        this.speed = 2;
+        this.bombCount = 0;
+        this.bombMaxAmount = 1;
         this.bombRange = 1;
         this.nextMove = null;
         this.droppedBomb = false;
@@ -226,14 +237,42 @@ class Player {
     }
 
     update() {
-        this.timeUntilMove--;
+        if (this.timeUntilMove - this.speed < 0) {
+            this.timeUntilMove = 0;
+        } else {
+            this.timeUntilMove -= this.speed;
+        }
+        if (!this.canMove()) {
+            this.nextMove = null;
+        }
+        if (!this.canDropBomb()) {
+            this.droppedBomb = false;
+        }
+    }
+
+    canMove() {
+        return this.timeUntilMove == 0;
+    }
+
+    canDropBomb() {
+        return this.bombCount <= this.bombMaxAmount;
+    }
+
+    move() {
+        this.nextMove = null;
+        this.timeUntilMove = 10;
+    }
+
+    dropBomb() {
+        this.bombCount++;
+        this.droppedBomb = false;
     }
 
     consume(item) {
         if (item == 'speed-boost') {
             this.speed++;
         } else if (item == 'bomb-amount-increase') {
-            this.bombAmount++;
+            this.bombMaxAmount++;
         } else if (item == 'bomb-range-increase') {
             this.bombRange++;
         }

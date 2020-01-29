@@ -64,4 +64,4 @@ setInterval(function () {
 
 setInterval(function () {
     currentGame.update();
-}, 1000 / 2);
+}, 1000 / 10);
