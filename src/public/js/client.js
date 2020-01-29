@@ -54,7 +54,7 @@ document.addEventListener('keyup', function (event) {
 });
 
 var canvas = document.getElementById('canvas');
-canvas.width = 750;
+canvas.width = 650;
 canvas.height = 550;
 var context = canvas.getContext('2d');
 context.strokeStyle = 'black';
@@ -64,7 +64,7 @@ context.textAlign = 'center';
 context.textBaseline = 'middle';
 
 socket.on('state', function (grid) {
-    context.clearRect(0, 0, 750, 550);
+    context.clearRect(0, 0, 650, 550);
 
     for (var i = 0; i < grid.length; i++) {
         for (var j = 0; j < grid[i].length; j++) {

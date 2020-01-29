@@ -3,7 +3,7 @@ var https = require('https');
 var express = require('express');
 var socketIO = require('socket.io');
 
-var game = require('./public/js/game');
+var game = require('./game');
 
 var options = {
     key: fs.readFileSync('./privkey.pem'),
