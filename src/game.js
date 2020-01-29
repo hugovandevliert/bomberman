@@ -86,10 +86,10 @@ class Game {
                     if (newCell && newCell.isWalkable()) {
                         newCell.player = player;
                         cell.player = null;
-                    }
-                    player.move();
-                    if (newCell.exploding) {
-                        player.die();
+                        player.move();
+                        if (newCell.exploding) {
+                            player.die();
+                        }
                     }
                 }
             }
@@ -132,7 +132,7 @@ class Cell {
         this.y = y;
         this.solid = false;
         this.exploding = false;
-        this.explodingFadeTime = 0;
+        this.explodingFadeTime = 5;
         this.player = null;
         this.item = null;
         this.bomb = null;
@@ -174,7 +174,7 @@ class Cell {
             }
         }
         this.exploding = true;
-        this.explodingFadeTime = 3;
+        this.explodingFadeTime = 5;
     }
 
     isWalkable() {
