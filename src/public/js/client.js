@@ -1,4 +1,4 @@
-var socket = io(":5000");
+var socket = io(':5000');
 
 socket.emit('new player');
 
@@ -17,19 +17,19 @@ var movement = {
 document.addEventListener('keydown', function (event) {
     if (document.activeElement.id != 'message-input') {
         switch (event.key) {
-            case "w":
+            case 'w':
                 movement.up = true;
                 break;
-            case "a":
+            case 'a':
                 movement.left = true;
                 break;
-            case "s":
+            case 's':
                 movement.down = true;
                 break;
-            case "d":
+            case 'd':
                 movement.right = true;
                 break;
-            case " ":
+            case ' ':
                 movement.bomb = true;
                 break;
         }
@@ -38,24 +38,29 @@ document.addEventListener('keydown', function (event) {
 document.addEventListener('keyup', function (event) {
     if (document.activeElement.id != 'message-input') {
         switch (event.key) {
-            case "w":
+            case 'w':
                 movement.up = false;
                 break;
-            case "a":
+            case 'a':
                 movement.left = false;
                 break;
-            case "s":
+            case 's':
                 movement.down = false;
                 break;
-            case "d":
+            case 'd':
                 movement.right = false;;
                 break;
-            case " ":
+            case ' ':
                 movement.bomb = false;
                 break;
         }
     }
 });
+
+document.getElementById('restart').onclick = function () {
+    socket.emit('restart');
+    this.blur();
+};
 
 var canvas = document.getElementById('canvas');
 canvas.width = 650;

@@ -40,6 +40,14 @@ io.on('connection', function (socket) {
         }
     });
 
+    socket.on('restart', function () {
+        var newGame = new game(11, 13);
+        for (var id in currentGame.players) {
+            newGame.addPlayer(id);
+        }
+        currentGame = newGame;
+    });
+
     socket.on('chat message', function (message) {
         io.sockets.emit('chat message', socket.id + ': ' + message);
     });
