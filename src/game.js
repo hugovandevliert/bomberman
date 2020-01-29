@@ -58,26 +58,19 @@ class Game {
                     var player = cell.player;
                     if (player.droppedBomb) {
                         var cells = [cell];
-                        var count = 1;
-                        while (count <= player.bombRange) {
-                            var leftCell = this.calculatePosition(i, j, 'left', count);
-                            if (leftCell && !leftCell.solid) {
-                                cells.push(leftCell);
+
+                        for (var direction of Player.directions()) {
+                            var count = 1;
+                            while (count <= player.bombRange) {
+                                var explodingCell = this.calculatePosition(i, j, direction, count);
+                                if (!explodingCell || explodingCell.solid) {
+                                    break;
+                                }
+                                cells.push(explodingCell);
+                                count++;
                             }
-                            var upCell = this.calculatePosition(i, j, 'up', count);
-                            if (upCell && !upCell.solid) {
-                                cells.push(upCell);
-                            }
-                            var rightCell = this.calculatePosition(i, j, 'right', count);
-                            if (rightCell && !rightCell.solid) {
-                                cells.push(rightCell);
-                            }
-                            var downCell = this.calculatePosition(i, j, 'down', count);
-                            if (downCell && !downCell.solid) {
-                                cells.push(downCell);
-                            }
-                            count++;
                         }
+
                         cell.bomb = new Bomb(cells);
                         player.droppedBomb = false;
                     }
@@ -226,6 +219,10 @@ class Player {
         this.bombRange = 1;
         this.nextMove = null;
         this.droppedBomb = false;
+    }
+
+    static directions() {
+        return ['left', 'up', 'right', 'down'];
     }
 
     update() {
