@@ -15,41 +15,45 @@ var movement = {
 };
 
 document.addEventListener('keydown', function (event) {
-    switch (event.key) {
-        case "w":
-            movement.up = true;
-            break;
-        case "a":
-            movement.left = true;
-            break;
-        case "s":
-            movement.down = true;
-            break;
-        case "d":
-            movement.right = true;
-            break;
-        case " ":
-            movement.bomb = true;
-            break;
+    if (document.activeElement.id != 'message-input') {
+        switch (event.key) {
+            case "w":
+                movement.up = true;
+                break;
+            case "a":
+                movement.left = true;
+                break;
+            case "s":
+                movement.down = true;
+                break;
+            case "d":
+                movement.right = true;
+                break;
+            case " ":
+                movement.bomb = true;
+                break;
+        }
     }
 });
 document.addEventListener('keyup', function (event) {
-    switch (event.key) {
-        case "w":
-            movement.up = false;
-            break;
-        case "a":
-            movement.left = false;
-            break;
-        case "s":
-            movement.down = false;
-            break;
-        case "d":
-            movement.right = false;;
-            break;
-        case " ":
-            movement.bomb = false;
-            break;
+    if (document.activeElement.id != 'message-input') {
+        switch (event.key) {
+            case "w":
+                movement.up = false;
+                break;
+            case "a":
+                movement.left = false;
+                break;
+            case "s":
+                movement.down = false;
+                break;
+            case "d":
+                movement.right = false;;
+                break;
+            case " ":
+                movement.bomb = false;
+                break;
+        }
     }
 });
 
