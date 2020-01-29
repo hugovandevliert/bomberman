@@ -38,8 +38,10 @@ class Game {
     }
 
     removePlayer(id) {
-        this.players[id].die();
-        delete this.players[id];
+        if (this.players[id]) {
+            this.players[id].die();
+            delete this.players[id];
+        }
     }
 
     update() {
@@ -78,12 +80,11 @@ class Game {
 
                     if (player.nextMove != null); {
                         var newCell = this.calculatePosition(i, j, player.nextMove, 1);
-                        player.nextMove = null;
-                        if (newCell == null || newCell.solid || newCell.bomb != null) {
-                            return;
+                        if (newCell != null && !newCell.solid && newCell.bomb == null) {
+                            newCell.player = player;
+                            cell.player = null;
                         }
-                        newCell.player = player;
-                        cell.player = null;
+                        player.nextMove = null;
                     }
                 }
             }
