@@ -64,35 +64,35 @@ context.textAlign = 'center';
 context.textBaseline = 'middle';
 
 socket.on('state', function (grid) {
-    context.clearRect(0, 0, 650, 550);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.strokeRect(0, 0, canvas.width, canvas.height);
 
     for (var i = 0; i < grid.length; i++) {
         for (var j = 0; j < grid[i].length; j++) {
             var cell = grid[i][j];
             context.strokeRect(cell.x, cell.y, 50, 50);
-            if (cell.solid) {
-                context.fillRect(cell.x, cell.y, 50, 50);
-            } else if (cell.item) {
-                if (cell.item == 'crate') {
-                    context.fillStyle = 'gray';
-                    context.fillRect(cell.x, cell.y, 50, 50);
-                } else if (cell.item == 'speed-boost') {
-                    context.fillText('🏃', cell.x + 25, cell.y + 25);
-                } else if (cell.item == 'bomb-amount-increase') {
-                    context.fillText('💣', cell.x + 25, cell.y + 25);
-                    context.fillText('➕', cell.x + 25, cell.y + 25);
-                } else if (cell.item == 'bomb-range-increase') {
-                    context.fillText('🎆', cell.x + 25, cell.y + 25);
-                }
-            }
+
             if (cell.bomb) {
                 context.fillText('💣', cell.x + 25, cell.y + 25);
             }
             if (cell.player) {
                 context.fillText(cell.player, cell.x + 25, cell.y + 25);
-            }
-            if (cell.exploding) {
+            } else if (cell.solid) {
+                context.fillStyle = 'black';
+                context.fillRect(cell.x, cell.y, 50, 50);
+            } else if (cell.exploding) {
                 context.fillText('💥', cell.x + 25, cell.y + 25);
+            } else if (cell.item) {
+                if (cell.item == 'crate') {
+                    context.fillStyle = 'lightgray';
+                    context.fillRect(cell.x + 1, cell.y + 1, 48, 48);
+                } else if (cell.item == 'speed-boost') {
+                    context.fillText('🏃', cell.x + 25, cell.y + 25);
+                } else if (cell.item == 'bomb-amount-increase') {
+                    context.fillText('🧨', cell.x + 25, cell.y + 25);
+                } else if (cell.item == 'bomb-range-increase') {
+                    context.fillText('🎆', cell.x + 25, cell.y + 25);
+                }
             }
         }
     }

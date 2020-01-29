@@ -11,6 +11,10 @@ class Game {
                 var cell = new Cell(j * 50, i * 50);
                 if (i % 2 && j % 2) {
                     cell.solid = true;
+                } else if ((i > 1 && i < height - 2) || (j > 1 && j < width - 2)) {
+                    if (Math.random() < 0.6) {
+                        cell.item = 'crate';
+                    }
                 }
                 this.grid[i][j] = cell;
             }
@@ -78,9 +82,9 @@ class Game {
                         player.droppedBomb = false;
                     }
 
-                    if (player.nextMove != null); {
+                    if (player.nextMove); {
                         var newCell = this.calculatePosition(i, j, player.nextMove, 1);
-                        if (newCell != null && !newCell.solid && newCell.bomb == null) {
+                        if (newCell && newCell.isWalkable()) {
                             newCell.player = player;
                             cell.player = null;
                         }
@@ -95,22 +99,22 @@ class Game {
         var newLocation = null;
         switch (direction) {
             case 'left':
-                if (j - amount > 0) {
+                if (j - amount >= 0) {
                     newLocation = this.grid[i][j - amount];
                 }
                 break;
             case 'up':
-                if (i - amount > 0) {
+                if (i - amount >= 0) {
                     newLocation = this.grid[i - amount][j];
                 }
                 break;
             case 'right':
-                if (j + amount < this.grid[i].length - 1) {
+                if (j + amount < this.grid[i].length) {
                     newLocation = this.grid[i][j + amount];
                 }
                 break;
             case 'down':
-                if (i + amount < this.grid.length - 1) {
+                if (i + amount < this.grid.length) {
                     newLocation = this.grid[i + amount][j];
                 }
                 break;
@@ -158,12 +162,22 @@ class Cell {
             this.player.die();
         }
         if (this.item == 'crate') {
-            this.item = 'bomb-amount-increase';
-        } else {
             this.item = null;
+            var chance = Math.random();
+            if (chance < 0.2) {
+                this.item = 'speed-boost';
+            } else if (chance < 0.4) {
+                this.item = 'bomb-amount-increase';
+            } else if (chance < 0.6) {
+                this.item = 'bomb-range-increase';
+            }
         }
         this.exploding = true;
         this.explodingFadeTime = 3;
+    }
+
+    isWalkable() {
+        return !this.solid && !this.bomb && this.item != 'crate';
     }
 
     toJSON() {
