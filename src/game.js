@@ -67,10 +67,13 @@ class Game {
                             var count = 1;
                             while (count <= player.bombRange) {
                                 var explodingCell = this.calculatePosition(i, j, direction, count);
-                                if (!explodingCell || explodingCell.solid || explodingCell.isCrate()) {
+                                if (!explodingCell || explodingCell.solid) {
                                     break;
                                 }
                                 cells.push(explodingCell);
+                                if (explodingCell.isCrate()) {
+                                    break;
+                                }
                                 count++;
                             }
                         }
@@ -182,7 +185,7 @@ class Cell {
     }
 
     isWalkable() {
-        return !this.solid && !this.bomb && this.item != 'crate';
+        return !this.solid && !this.bomb && !this.isCrate();
     }
 
     toJSON() {
