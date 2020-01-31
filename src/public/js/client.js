@@ -91,9 +91,10 @@ socket.on('state', function (grid) {
             if (cell.bomb) {
                 context.fillText('💣', cell.x + 25, cell.y + 25);
             }
-            if (cell.player) {
-                context.fillText(cell.player, cell.x + 25, cell.y + 25);
-            } else if (cell.solid) {
+            for (var player of cell.players) {
+                context.fillText(player, cell.x + 25, cell.y + 25);
+            }
+            if (cell.solid) {
                 context.fillStyle = 'black';
                 context.fillRect(cell.x, cell.y, 50, 50);
             } else if (cell.exploding) {
