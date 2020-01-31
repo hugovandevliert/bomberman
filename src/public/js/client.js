@@ -101,7 +101,7 @@ socket.on('state', function (grid) {
                 context.fillText('💥', cell.x + 25, cell.y + 25);
             } else if (cell.item) {
                 if (cell.item == 'crate') {
-                    context.fillStyle = 'lightgray';
+                    context.fillStyle = 'BurlyWood';
                     context.fillRect(cell.x + 1, cell.y + 1, 48, 48);
                 } else if (cell.item == 'speed-boost') {
                     context.fillText('🏃', cell.x + 25, cell.y + 25);
