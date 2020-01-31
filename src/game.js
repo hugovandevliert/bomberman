@@ -36,7 +36,7 @@ class Game {
             var emoji = '🤖';
         }
         var newPlayer = new Player(emoji);
-        cell.player = newPlayer;
+        cell.players.push(newPlayer);
         this.players[id] = newPlayer;
         this.playerCount++;
     }
@@ -54,41 +54,39 @@ class Game {
                 var cell = this.grid[i][j];
                 cell.update();
 
-                if (!cell.player) {
-                    continue;
-                }
+                for (var k = 0; k < cell.players.length; k++) {
+                    var player = cell.players[k];
+                    player.update();
 
-                var player = cell.player;
-                player.update();
-
-                if (cell.bomb) {
-                    player.droppedBomb = false;
-                }
-                if (player.droppedBomb && player.canDropBomb()) {
-                    var cells = [cell];
-                    for (var direction of Player.directions()) {
-                        var count = 1;
-                        while (count <= player.bombRange) {
-                            var explodingCell = this.calculatePosition(i, j, direction, count);
-                            if (!explodingCell || explodingCell.solid) {
-                                break;
-                            }
-                            cells.push(explodingCell);
-                            count++;
-                        }
+                    if (cell.bomb) {
+                        player.droppedBomb = false;
                     }
-                    cell.bomb = new Bomb(player, cells);
-                    player.dropBomb();
-                }
+                    if (player.droppedBomb && player.canDropBomb()) {
+                        var cells = [cell];
+                        for (var direction of Player.directions()) {
+                            var count = 1;
+                            while (count <= player.bombRange) {
+                                var explodingCell = this.calculatePosition(i, j, direction, count);
+                                if (!explodingCell || explodingCell.solid) {
+                                    break;
+                                }
+                                cells.push(explodingCell);
+                                count++;
+                            }
+                        }
+                        cell.bomb = new Bomb(player, cells);
+                        player.dropBomb();
+                    }
 
-                if (player.nextMove && player.canMove()) {
-                    var newCell = this.calculatePosition(i, j, player.nextMove, 1);
-                    if (newCell && newCell.isWalkable()) {
-                        newCell.player = player;
-                        cell.player = null;
-                        player.move();
-                        if (newCell.exploding) {
-                            player.die();
+                    if (player.nextMove && player.canMove()) {
+                        var newCell = this.calculatePosition(i, j, player.nextMove, 1);
+                        if (newCell && newCell.isWalkable()) {
+                            newCell.players.push(player);
+                            cell.players.splice(k, 1);
+                            player.move();
+                            if (newCell.exploding) {
+                                player.die();
+                            }
                         }
                     }
                 }
@@ -133,14 +131,16 @@ class Cell {
         this.solid = false;
         this.exploding = false;
         this.explodingFadeTime = 5;
-        this.player = null;
+        this.players = [];
         this.item = null;
         this.bomb = null;
     }
 
     update() {
-        if (this.player && this.item) {
-            this.player.consume(this.item);
+        if (this.item) {
+            for (var player of this.players) {
+                player.consume(this.item);
+            }
             this.item = null;
         }
         if (this.bomb) {
@@ -159,8 +159,8 @@ class Cell {
             this.bomb.explode();
             this.bomb = null;
         }
-        if (this.player) {
-            this.player.die();
+        for (var player of this.players) {
+            player.die();
         }
         if (this.item == 'crate') {
             this.item = null;
@@ -182,12 +182,16 @@ class Cell {
     }
 
     toJSON() {
+        var players = [];
+        for (var player of this.players) {
+            players.push(player.emoji);
+        }
         return {
             x: this.x,
             y: this.y,
             solid: this.solid,
             exploding: this.exploding,
-            player: this.player ? this.player.emoji : null,
+            players: players,
             item: this.item,
             bomb: this.bomb ? true : false,
         }
