@@ -262,7 +262,7 @@ class Player {
     }
 
     canMove() {
-        return this.timeUntilMove == 0;
+        return this.timeUntilMove == 0 && this.speed > 0;
     }
 
     canDropBomb() {
