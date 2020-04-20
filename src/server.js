@@ -1,69 +1,68 @@
-var fs = require('fs');
-var https = require('https');
-var express = require('express');
-var socketIO = require('socket.io');
-
-var game = require('./game');
+import express from 'express';
+import { readFileSync } from 'fs';
+import { createServer } from 'https';
+import { listen } from 'socket.io';
+import game from './game';
 
 var options = {
-    key: fs.readFileSync('./privkey.pem'),
-    cert: fs.readFileSync('./fullchain.pem')
+  key: readFileSync('./privkey.pem'),
+  cert: readFileSync('./fullchain.pem')
 };
 
 var app = express();
-var server = https.createServer(options, app).listen(5000);
-var io = socketIO.listen(server);
+var server = createServer(options, app).listen(5000);
+var io = listen(server);
 
 app.use(express.static('src/public'));
 
 var currentGame = new game(11, 13);
 
 io.on('connection', function (socket) {
-    socket.on('new player', function () {
-        console.log('New player connected:', socket.id)
-        io.sockets.emit('chat message', 'Server: ' + socket.id + ' joined.');
-        currentGame.addPlayer(socket.id);
-    });
+  socket.on('new player', function () {
+    console.log('New player connected:', socket.id)
+    io.sockets.emit('chat message', 'Server: ' + socket.id + ' joined.');
+    currentGame.addPlayer(socket.id);
+  });
 
-    socket.on('movement', function (data) {
-        var player = currentGame.players[socket.id] || {};
-        if (data.bomb) {
-            player.droppedBomb = true;
-        }
-        if (data.left) {
-            player.nextMove = 'left';
-        } else if (data.up) {
-            player.nextMove = 'up';
-        } else if (data.right) {
-            player.nextMove = 'right';
-        } else if (data.down) {
-            player.nextMove = 'down';
-        }
-    });
+  socket.on('movement', function (data) {
+    var player = currentGame.players[socket.id] || {};
+    if (data.bomb) {
+      player.droppedBomb = true;
+    }
+    if (data.left) {
+      player.nextMove = 'left';
+    } else if (data.up) {
+      player.nextMove = 'up';
+    } else if (data.right) {
+      player.nextMove = 'right';
+    } else if (data.down) {
+      player.nextMove = 'down';
+    }
+  });
 
-    socket.on('restart', function () {
-        var newGame = new game(11, 13);
-        for (var id in currentGame.players) {
-            newGame.addPlayer(id);
-        }
-        currentGame = newGame;
-    });
+  socket.on('restart', function () {
+    var newGame = new game(11, 13);
+    for (var id in currentGame.players) {
+      newGame.addPlayer(id);
+    }
+    currentGame = newGame;
+  });
 
-    socket.on('chat message', function (message) {
-        io.sockets.emit('chat message', socket.id + ': ' + message);
-    });
+  socket.on('chat message', function (message) {
+    io.sockets.emit('chat message', socket.id + ': ' + message);
+  });
 
-    socket.on('disconnect', function () {
-        console.log('Player left:', socket.id)
-        io.sockets.emit('chat message', 'Server: ' + socket.id + ' left.');
-        currentGame.removePlayer(socket.id);
-    });
+  socket.on('disconnect', function () {
+    console.log('Player left:', socket.id)
+    io.sockets.emit('chat message', 'Server: ' + socket.id + ' left.');
+    currentGame.removePlayer(socket.id);
+  });
 });
 
 setInterval(function () {
-    io.sockets.emit('state', currentGame.grid);
+  io.sockets.emit('state', currentGame.grid);
 }, 1000 / 60);
 
 setInterval(function () {
-    currentGame.update();
+  currentGame.update();
 }, 1000 / 10);
