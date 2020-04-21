@@ -16,43 +16,35 @@ const movement = {
 
 document.addEventListener('keydown', (event) => {
   if (document.activeElement.id !== 'message-input') {
-    switch (event.key) {
-      case 'w':
-        movement.up = true
-        break
-      case 'a':
-        movement.left = true
-        break
-      case 's':
-        movement.down = true
-        break
-      case 'd':
-        movement.right = true
-        break
-      case ' ':
-        movement.bomb = true
-        break
+    event.preventDefault()
+
+    if (event.key === 'w' || event.key === 'ArrowUp') {
+      movement.up = true
+    } else if (event.key === 'a' || event.key === 'ArrowLeft') {
+      movement.left = true
+    } else if (event.key === 's' || event.key === 'ArrowDown') {
+      movement.down = true
+    } else if (event.key === 'd' || event.key === 'ArrowRight') {
+      movement.right = true
+    } else if (event.key === ' ') {
+      movement.bomb = true
     }
   }
 })
 document.addEventListener('keyup', (event) => {
   if (document.activeElement.id !== 'message-input') {
-    switch (event.key) {
-      case 'w':
-        movement.up = false
-        break
-      case 'a':
-        movement.left = false
-        break
-      case 's':
-        movement.down = false
-        break
-      case 'd':
-        movement.right = false
-        break
-      case ' ':
-        movement.bomb = false
-        break
+    event.preventDefault()
+
+    if (event.key === 'w' || event.key === 'ArrowUp') {
+      movement.up = false
+    } else if (event.key === 'a' || event.key === 'ArrowLeft') {
+      movement.left = false
+    } else if (event.key === 's' || event.key === 'ArrowDown') {
+      movement.down = false
+    } else if (event.key === 'd' || event.key === 'ArrowRight') {
+      movement.right = false
+    } else if (event.key === ' ') {
+      movement.bomb = false
     }
   }
 })
