@@ -1,4 +1,4 @@
-var socket = io(':5000')
+const socket = io(':5000')
 
 socket.emit('new player')
 
@@ -6,7 +6,7 @@ setInterval(() => {
   socket.emit('movement', movement)
 }, 1000 / 60)
 
-var movement = {
+const movement = {
   up: false,
   down: false,
   left: false,
@@ -58,7 +58,7 @@ document.addEventListener('keyup', (event) => {
 })
 document.getElementById('message-form').onsubmit = (event) => {
   event.preventDefault()
-  var message = document.getElementById('message-input')
+  const message = document.getElementById('message-input')
   if (message.value) {
     socket.emit('chat message', message.value)
     message.value = ''
@@ -69,10 +69,10 @@ document.getElementById('restart').onclick = () => {
   this.blur()
 }
 
-var canvas = document.getElementById('canvas')
+const canvas = document.getElementById('canvas')
 canvas.width = 650
 canvas.height = 550
-var context = canvas.getContext('2d')
+const context = canvas.getContext('2d')
 context.strokeStyle = 'black'
 context.fillStyle = 'black'
 context.font = '30px serif'
@@ -83,15 +83,15 @@ socket.on('state', (grid) => {
   context.clearRect(0, 0, canvas.width, canvas.height)
   context.strokeRect(0, 0, canvas.width, canvas.height)
 
-  for (var i = 0; i < grid.length; i++) {
-    for (var j = 0; j < grid[i].length; j++) {
-      var cell = grid[i][j]
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      const cell = grid[i][j]
       context.strokeRect(cell.x, cell.y, 50, 50)
 
       if (cell.bomb) {
         context.fillText('💣', cell.x + 25, cell.y + 25)
       }
-      for (var player of cell.players) {
+      for (const player of cell.players) {
         context.fillText(player, cell.x + 25, cell.y + 25)
       }
       if (cell.solid) {
@@ -116,10 +116,10 @@ socket.on('state', (grid) => {
 })
 
 socket.on('chat message', (message) => {
-  var node = document.createElement('li')
-  var messageNode = document.createTextNode(message)
+  const node = document.createElement('li')
+  const messageNode = document.createTextNode(message)
   node.appendChild(messageNode)
-  var messageList = document.getElementById('message-list')
+  const messageList = document.getElementById('message-list')
   messageList.appendChild(node)
   messageList.scrollTop = messageList.scrollHeight
 })

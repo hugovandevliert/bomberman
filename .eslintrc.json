@@ -16,6 +16,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "no-var": "error",
     "no-redeclare": "off",
     "no-undef": "off",
     "space-before-function-paren": "off"

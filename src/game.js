@@ -3,12 +3,12 @@ class Game {
     this.players = {}
     this.playerCount = 0
     this.grid = [height]
-    for (var i = 0; i < height; i++) {
+    for (let i = 0; i < height; i++) {
       this.grid[i] = [width]
     }
-    for (var i = 0; i < height; i++) {
-      for (var j = 0; j < width; j++) {
-        var cell = new Cell(j * 50, i * 50)
+    for (let i = 0; i < height; i++) {
+      for (let j = 0; j < width; j++) {
+        const cell = new Cell(j * 50, i * 50)
         if (i % 2 && j % 2) {
           cell.solid = true
         } else if ((i > 1 && i < height - 2) || (j > 1 && j < width - 2)) {
@@ -22,20 +22,21 @@ class Game {
   }
 
   addPlayer(id) {
+    let cell, emoji
     if (this.playerCount === 1) {
-      var cell = this.grid[this.grid.length - 1][this.grid[this.grid.length - 1].length - 1]
-      var emoji = '👹'
+      cell = this.grid[this.grid.length - 1][this.grid[this.grid.length - 1].length - 1]
+      emoji = '👹'
     } else if (this.playerCount === 2) {
-      var cell = this.grid[0][this.grid[0].length - 1]
-      var emoji = '🤡'
+      cell = this.grid[0][this.grid[0].length - 1]
+      emoji = '🤡'
     } else if (this.playerCount === 3) {
-      var cell = this.grid[this.grid.length - 1][0]
-      var emoji = '😈'
+      cell = this.grid[this.grid.length - 1][0]
+      emoji = '😈'
     } else {
-      var cell = this.grid[0][0]
-      var emoji = '🤖'
+      cell = this.grid[0][0]
+      emoji = '🤖'
     }
-    var newPlayer = new Player(emoji)
+    const newPlayer = new Player(emoji)
     cell.players.push(newPlayer)
     this.players[id] = newPlayer
     this.playerCount++
@@ -49,24 +50,24 @@ class Game {
   }
 
   update() {
-    for (var i = 0; i < this.grid.length; i++) {
-      for (var j = 0; j < this.grid[i].length; j++) {
-        var cell = this.grid[i][j]
+    for (let i = 0; i < this.grid.length; i++) {
+      for (let j = 0; j < this.grid[i].length; j++) {
+        const cell = this.grid[i][j]
         cell.update()
 
-        for (var k = 0; k < cell.players.length; k++) {
-          var player = cell.players[k]
+        for (let k = 0; k < cell.players.length; k++) {
+          const player = cell.players[k]
           player.update()
 
           if (cell.bomb) {
             player.droppedBomb = false
           }
           if (player.droppedBomb && player.canDropBomb()) {
-            var cells = [cell]
-            for (var direction of Player.directions()) {
-              var count = 1
+            const cells = [cell]
+            for (const direction of Player.directions()) {
+              let count = 1
               while (count <= player.bombRange) {
-                var explodingCell = this.calculatePosition(i, j, direction, count)
+                const explodingCell = this.calculatePosition(i, j, direction, count)
                 if (!explodingCell || explodingCell.solid) {
                   break
                 }
@@ -82,7 +83,7 @@ class Game {
           }
 
           if (player.nextMove && player.canMove()) {
-            var newCell = this.calculatePosition(i, j, player.nextMove, 1)
+            const newCell = this.calculatePosition(i, j, player.nextMove, 1)
             if (newCell && newCell.isWalkable()) {
               newCell.players.push(player)
               cell.players.splice(k, 1)
@@ -98,7 +99,7 @@ class Game {
   }
 
   calculatePosition(i, j, direction, amount) {
-    var newLocation = null
+    let newLocation = null
     switch (direction) {
       case 'left':
         if (j - amount >= 0) {
@@ -141,7 +142,7 @@ class Cell {
 
   update() {
     if (this.item && this.players.length > 0) {
-      for (var player of this.players) {
+      for (const player of this.players) {
         player.consume(this.item)
       }
       this.item = null
@@ -162,12 +163,12 @@ class Cell {
       this.bomb.explode()
       this.bomb = null
     }
-    for (var player of this.players) {
+    for (const player of this.players) {
       player.die()
     }
     if (this.isCrate()) {
       this.item = null
-      var chance = Math.random()
+      const chance = Math.random()
       if (chance < 0.2) {
         this.item = 'speed-boost'
       } else if (chance < 0.4) {
@@ -189,8 +190,8 @@ class Cell {
   }
 
   toJSON() {
-    var players = []
-    for (var player of this.players) {
+    const players = []
+    for (const player of this.players) {
       players.push(player.emoji)
     }
     return {

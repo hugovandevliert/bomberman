@@ -1,22 +1,22 @@
-var fs = require('fs')
-var https = require('https')
-var express = require('express')
-var socketIO = require('socket.io')
+const fs = require('fs')
+const https = require('https')
+const express = require('express')
+const socketIO = require('socket.io')
 
-var Game = require('./game')
+const Game = require('./game')
 
-var options = {
+const options = {
   key: fs.readFileSync('./privkey.pem'),
   cert: fs.readFileSync('./fullchain.pem')
 }
 
-var app = express()
-var server = https.createServer(options, app).listen(5000)
-var io = socketIO.listen(server)
+const app = express()
+const server = https.createServer(options, app).listen(5000)
+const io = socketIO.listen(server)
 
 app.use(express.static('src/public'))
 
-var currentGame = new Game(11, 13)
+let currentGame = new Game(11, 13)
 
 io.on('connection', (socket) => {
   socket.on('new player', () => {
@@ -26,7 +26,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('movement', (data) => {
-    var player = currentGame.players[socket.id] || {}
+    const player = currentGame.players[socket.id] || {}
     if (data.bomb) {
       player.droppedBomb = true
     }
@@ -42,8 +42,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('restart', () => {
-    var newGame = new Game(11, 13)
-    for (var id in currentGame.players) {
+    const newGame = new Game(11, 13)
+    for (const id in currentGame.players) {
       newGame.addPlayer(id)
     }
     currentGame = newGame
