@@ -269,7 +269,7 @@ class Player {
   }
 
   canDropBomb() {
-    return this.bombCount <= this.bombMaxAmount
+    return this.bombCount < this.bombMaxAmount
   }
 
   move() {
