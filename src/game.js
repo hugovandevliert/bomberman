@@ -176,6 +176,8 @@ class Cell {
       } else if (chance < 0.6) {
         this.item = 'bomb-range-increase'
       }
+    } else {
+      this.item = null
     }
     this.exploding = true
     this.explodingFadeTime = 5
