@@ -47,6 +47,7 @@ io.on('connection', (socket) => {
       newGame.addPlayer(id)
     }
     currentGame = newGame
+    io.sockets.emit('chat message', 'Server: Game restarted.')
   })
 
   socket.on('chat message', (message) => {
