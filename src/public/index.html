@@ -9,16 +9,21 @@
 </head>
 
 <body>
-    <canvas id="canvas"></canvas>
-    <button id="restart">Restart</button>
+    <h1>Bomberman</h1>
 
-    <div id="chat-box">
-        <ul id="message-list"></ul>
-        <form id="message-form" action="">
-            <input id="message-input" autocomplete="off" />
-            <button>Send</button>
-        </form>
+    <div class="row">
+        <canvas id="canvas"></canvas>
+
+        <div id="chat-box">
+            <ul id="message-list"></ul>
+            <form id="message-form" action="">
+                <input id="message-input" autocomplete="off" placeholder="Type a message" />
+                <button>Send</button>
+            </form>
+        </div>
     </div>
+
+    <button id="restart">Restart</button>
 
     <footer>
         <p>

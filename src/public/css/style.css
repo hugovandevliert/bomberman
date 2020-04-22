@@ -1,20 +1,80 @@
+:root {
+  --color-background: #eeeeee;
+  --color-title: #1a1b1d;
+  --color-text: #333;
+  --color-link: #333;
+}
+
+body {
+  font-family: "Courier New", Courier, monospace;
+  text-align: center;
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+h1 {
+  font-weight: normal;
+  color: var(--color-title);
+  text-align: center;
+}
+
+a {
+  color: var(--color-link);
+}
+
+a:hover {
+  filter: brightness(1.25);
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.row {
+  width: 100%;
+  display: inline-block;
+  margin: 10px 0;
+}
+
+#canvas {
+  width: 650px;
+  height: 550px;
+  display: inline-block;
+  border: 2px solid black;
+}
+
 #chat-box {
-    width: 650px;
+  width: 650px;
+  display: inline-block;
+  text-align: left;
 }
 
 #chat-box ul {
-    overflow: hidden;
-    overflow-y: auto;
-    list-style-type: none;
-    padding-left: 0;
-    height: 200px;
+  overflow: hidden;
+  overflow-y: auto;
+  list-style-type: none;
+  padding: 10px;
+  height: 500px;
+  border: 2px solid black;
 }
 
 #chat-box input {
-    width: 75%;
+  width: 75%;
 }
 
 #chat-box button {
-    float: right;
-    width: 20%;
+  float: right;
+  width: 20%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #2d3239;
+    --color-title: #c2c1bd;
+    --color-text: #9b9781;
+    --color-link: #9b9781;
+  }
 }

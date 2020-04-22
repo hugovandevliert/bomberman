@@ -79,6 +79,8 @@ socket.on('state', (grid) => {
     for (let j = 0; j < grid[i].length; j++) {
       const cell = grid[i][j]
       context.strokeRect(cell.x, cell.y, 50, 50)
+      context.fillStyle = 'silver'
+      context.fillRect(cell.x, cell.y, 50, 50)
 
       if (cell.bomb) {
         context.fillText('💣', cell.x + 25, cell.y + 25)
@@ -93,8 +95,8 @@ socket.on('state', (grid) => {
         context.fillText('💥', cell.x + 25, cell.y + 25)
       } else if (cell.item) {
         if (cell.item === 'crate') {
-          context.fillStyle = 'BurlyWood'
-          context.fillRect(cell.x + 1, cell.y + 1, 48, 48)
+          context.fillStyle = 'peru'
+          context.fillRect(cell.x, cell.y, 50, 50)
         } else if (cell.item === 'speed-boost') {
           context.fillText('🏃', cell.x + 25, cell.y + 25)
         } else if (cell.item === 'bomb-amount-increase') {
